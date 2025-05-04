@@ -1,23 +1,28 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import WebApp from '@twa-dev/sdk'
+import WebApp from '@twa-dev/sdk';
+
+export const dynamic = 'force-dynamic';
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(WebApp.initData);
-    WebApp.HapticFeedback.selectionChanged();
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const [initData, setInitData] = useState('');
 
   useEffect(() => {
-    
-    }, [])
+    if (typeof window !== 'undefined') {
+      setInitData(WebApp.initData);
+    }
+  }, []);
 
-  
+  const copyToClipboard = () => {
+    if (typeof window !== 'undefined') {
+      navigator.clipboard.writeText(initData);
+      WebApp.HapticFeedback.selectionChanged();
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8">
